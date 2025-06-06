@@ -8,11 +8,15 @@ use App\Livewire\Todos;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-
+/*
 Route::get('/', function () {
     return view('welcome');
-})->name('home');
+})->name('home');*/
 
+
+Route::get('/', function () {
+    return view('home');
+})->name('home');
 
 
 Route::get('/counter', Counter::class)
