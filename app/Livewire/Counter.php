@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use Exception;
 use Livewire\Component;
 
 class Counter extends Component
@@ -13,7 +14,8 @@ class Counter extends Component
         return view('livewire.counter');
     }
 
-    public function increment(){
-        $this->count++;
+    public function increment($by = 1){
+        $this->count = $this->count + $by;
+
     }
 }
