@@ -2,8 +2,10 @@
 
 namespace App\Livewire;
 
+use LiveWire\Attributes\Title;
 use Livewire\Component;
 
+#[Title('Todos')]
 class Todos extends Component
 {
     public function render()

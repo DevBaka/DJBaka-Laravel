@@ -4,7 +4,10 @@ namespace App\Livewire;
 
 use Exception;
 use Livewire\Component;
+//use LiveWire\Attributes\Title;
 
+
+//#[Title('Counter')]
 class Counter extends Component
 {
 
