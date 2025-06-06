@@ -8,5 +8,7 @@
 <body>
     Hello Internetz!
     <livewire:hello-world />
+    <br><hr><br>
+    <livewire:counter />
 </body>
 </html>
