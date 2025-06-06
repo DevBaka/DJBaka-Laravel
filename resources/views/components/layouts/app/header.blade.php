@@ -12,9 +12,7 @@
             </a>
 
             <flux:navbar class="-mb-px max-lg:hidden">
-                <flux:navbar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
-                    {{ __('Dashboard') }}
-                </flux:navbar.item>
+                @include('partials.nav-items')
             </flux:navbar>
 
             <flux:spacer />
@@ -95,17 +93,24 @@
             <a href="{{ route('dashboard') }}" class="ms-1 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo />
             </a>
-            {{-- 
-            <a href="{{ route('counter') }}" class="ms-1 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
+            
+            <a href="{{ route('events') }}" class="ms-1 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
                 <x-app-logo />
             </a>
-            --}}
+            
 
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')">
                     <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                     {{ __('Dashboard') }}
                     </flux:navlist.item>
+                    <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                    {{ __('Events') }}
+                    </flux:navlist.item>
+                    <flux:navbar.item icon="calendar" :href="route('events')" :current="request()->routeIs('events')" wire:navigate>
+                    {{ __('Events') }}
+</flux:navbar.item>
+
                 </flux:navlist.group>
             </flux:navlist>
 
