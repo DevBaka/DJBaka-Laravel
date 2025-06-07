@@ -51,7 +51,7 @@
             <!-- partial -->
 
             <div class="page-content">
-
+                @yield('backend')
             </div>
 
             <!-- partial:partials/_footer.html -->

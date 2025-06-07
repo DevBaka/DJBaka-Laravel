@@ -8,8 +8,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('backend.dashboard');
-})->middleware(['auth', 'verified'])->name('backend.dashboard');
+    return view('backend.pages.home');
+})->middleware(['auth', 'verified'])->name('backend.pages.home');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
