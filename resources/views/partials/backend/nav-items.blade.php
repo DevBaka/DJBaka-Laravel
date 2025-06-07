@@ -12,3 +12,7 @@
 <flux:navbar.item icon="calendar" :href="route('counter')" :current="request()->routeIs('counter')" wire:navigate>
     {{ __('Counter') }}
 </flux:navbar.item>
+
+<flux:navbar.item icon="calendar" :href="route('home')" :current="request()->routeIs('home')" wire:navigate>
+    {{ __('Home') }}
+</flux:navbar.item>

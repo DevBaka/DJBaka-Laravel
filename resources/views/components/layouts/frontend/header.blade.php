@@ -20,6 +20,7 @@
             <a href="{{ route('home') }}" class="hover:text-blue-600">Mixes</a>
             <a href="{{ route('home') }}" class="hover:text-blue-600">Über mich</a>
             <a href="{{ route('home') }}" class="hover:text-blue-600">Kontakt</a>
+            <a href="{{ route('dashboard') }}" class="hover:text-blue-600">Dashboard</a>
         </nav>
     </div>
 </header>
