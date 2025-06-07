@@ -20,3 +20,6 @@ Route::get('employees/{id}', [EmployeeController::class, 'getEmployeeById']);
 
 // Add Employee
 Route::post('addEmployee', [EmployeeController::class, 'addEmployee']);
+
+// Update Employee
+Route::put('updateEmployee/{id}', [EmployeeController::class, 'updateEmployee']);
