@@ -23,3 +23,6 @@ Route::post('addEmployee', [EmployeeController::class, 'addEmployee']);
 
 // Update Employee
 Route::put('updateEmployee/{id}', [EmployeeController::class, 'updateEmployee']);
+
+// Delete Employee
+Route::delete('deleteEmployee/{id}', [EmployeeController::class, 'deleteEmployee']);
