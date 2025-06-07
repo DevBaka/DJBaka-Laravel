@@ -11,4 +11,9 @@ Route::get('/user', function (Request $request) {
 
 
 //Route::get('employees', 'EmployeeController@getEmployee');
+
+// Get all employees
 Route::get('employees', [EmployeeController::class, 'getEmployee']);
+
+// Get specific employee detail
+Route::get('employees/{id}', [EmployeeController::class, 'getEmployeeById']);
