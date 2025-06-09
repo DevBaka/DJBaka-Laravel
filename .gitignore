@@ -25,7 +25,6 @@ Homestead.yaml
 # Öffentlich generierte Dateien
 /public/hot
 /public/storage
-/public/build
 
 # Test & Cache
 .phpunit.result.cache
@@ -35,5 +34,7 @@ Homestead.yaml
 # Laravel-spezifisch
 /storage/*.key
 /storage/pail
-/vendor
-/bootstrap/cache
+
+# >>> NICHT ignorieren für Deployment
+# /vendor               ← entfernt, damit `vendor/` getrackt wird
+# /bootstrap/cache      ← entfernt, damit gecachte Dateien mitkommen
