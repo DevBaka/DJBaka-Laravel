@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Hash;
 
 class BackendController extends Controller
 {
@@ -48,4 +49,35 @@ class BackendController extends Controller
         return redirect()->back()->with($notification);
     }
 
+    public function AdminChangePassword(){
+
+        return view('backend.pages.profile.password-edit');
+    }
+
+    public function AdminUpdatePassword(Request $request){
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required',
+            'confirm_password' => ['required','same:new_password']
+        ]);
+        $admin = User::find(Auth::user()->id);
+        if(!Hash::check($request->old_password, $admin->password)){
+            $notification = [
+            'message' => 'Altes Password ist falsch!',
+            'alert-type' => 'error'
+        ];
+            return redirect()->back()->with($notification);
+        }
+
+        $admin->password = Hash::make($request->new_password);
+        $admin->save();
+
+        $notification = [
+            'message' => 'Passwort Erfolgreich geupdatet!',
+            'alert-type' => 'success'
+        ];
+        return redirect()->back()->with($notification);
+
+
+    }
 }
