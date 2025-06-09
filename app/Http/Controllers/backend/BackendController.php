@@ -40,7 +40,12 @@ class BackendController extends Controller
         $admin->created_at = Carbon::now();
         $admin->save();
 
-        
+        $notification = [
+            'message' => 'Profile Updated Erfolgreich!',
+            'alert-type' => 'info'
+        ];
+
+        return redirect()->back()->with($notification);
     }
 
 }
