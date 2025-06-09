@@ -1,26 +1,39 @@
+# Allgemeines
 *.log
 .DS_Store
+Thumbs.db
+npm-debug.log
+yarn-error.log
+
+# IDEs und Editor-Dateien
+/.fleet
+/.idea
+/.vscode
+/.zed
+
+# Umgebungsdateien
 .env
 .env.backup
 .env.production
-.phpactor.json
-.phpunit.result.cache
-/.fleet
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
-/auth.json
+auth.json
+Homestead.json
+Homestead.yaml
+
+# Node-Module
 /node_modules
-/public/build
+
+# Öffentlich generierte Dateien
 /public/hot
 /public/storage
+/public/build
+
+# Test & Cache
+.phpunit.result.cache
+/.phpunit.cache
+/phpactor.json
+
+# Laravel-spezifisch
 /storage/*.key
 /storage/pail
 /vendor
-Homestead.json
-Homestead.yaml
-npm-debug.log
-Thumbs.db
-yarn-error.log
+/bootstrap/cache
