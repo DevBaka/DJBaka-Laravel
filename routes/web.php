@@ -16,6 +16,7 @@ Route::middleware('auth')->group(function(){
 
     Route::get('/backend/logout', [BackendController::class, 'AdminLogout'])->name('backend.logout');
     Route::get('/backend/edit-profile', [BackendController::class, 'AdminEditProfile'])->name('backend.edit.profile');
+    Route::post('/backend/update-profile', [BackendController::class, 'AdminUpdateProfile'])->name('backend.update.profile');
 
 
 });
