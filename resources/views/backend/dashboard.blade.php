@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="description" content="DJBaka Backend">
-    <meta name="author" content="NobleUI">
+    <meta name="author" content="DJBaka">
     <meta name="keywords"
-        content="nobleui, bootstrap, bootstrap 5, bootstrap5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+        content="dj, djbaka">
 
-    <title>NobleUI - HTML Bootstrap 5</title>
+    <title>DJBaka - Backend</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -114,5 +114,4 @@
     </script>
 
 </body>
-
 </html>
