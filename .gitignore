@@ -16,7 +16,6 @@
 /public/build
 /public/hot
 /public/storage
-<<<<<<< HEAD
 /storage/*.key
 /storage/pail
 /vendor
@@ -25,18 +24,3 @@ Homestead.yaml
 npm-debug.log
 Thumbs.db
 yarn-error.log
-=======
-
-# Test & Cache
-.phpunit.result.cache
-/.phpunit.cache
-/phpactor.json
-
-# Laravel-spezifisch
-/storage/*.key
-/storage/pail
-
-# >>> NICHT ignorieren für Deployment
-# /vendor               ← entfernt, damit `vendor/` getrackt wird
-# /bootstrap/cache      ← entfernt, damit gecachte Dateien mitkommen
->>>>>>> parent of a77201c (Revert "addet vendor")
