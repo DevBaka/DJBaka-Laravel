@@ -89,7 +89,7 @@ public function uploadLogo(Request $request)
     public function showLogo()
 {
     // Hole den Eintrag aus ffxiv_logo_selected (z.B. erster Eintrag)
-    $selected = FfxivLogoSelected::first();
+    $selected = FFXIVLogoSelected::first();
 
     // Falls kein Eintrag, ggf. ein Standard-Logo setzen
     $logoPath = null;
