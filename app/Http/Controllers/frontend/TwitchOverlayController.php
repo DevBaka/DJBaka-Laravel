@@ -5,7 +5,7 @@ namespace App\Http\Controllers\frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FFXIVLogos;
-use App\Models\FfxivLogoSelected;
+use App\Models\FFXIVLogoSelected;
 use Illuminate\Support\Facades\Storage;
 
 
