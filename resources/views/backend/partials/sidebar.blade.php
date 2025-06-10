@@ -19,6 +19,13 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                    <li class="nav-item">
+                        <a href="{{ route('twitch.overlay.ffxiv.logo.edit') }}" class="nav-link">
+                            <i class="link-icon" data-feather="box"></i>
+                            <span class="link-title">FFXIV Logos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item"
                         <a href="pages/apps/calendar.html" class="nav-link">
                             <i class="link-icon" data-feather="calendar"></i>
                             <span class="link-title">Calendar</span>

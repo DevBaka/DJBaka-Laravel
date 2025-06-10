@@ -70,7 +70,7 @@
                </div>
 
                <div class="header-button">
-                  <a href="#" class="btn tj-btn-primary">Hire me!</a>
+                  <a href="#" class="btn tj-btn-primary">Book me!</a>
                </div>
 
                <div class="menu-bar d-lg-none">
