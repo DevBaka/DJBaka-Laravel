@@ -1,3 +1,5 @@
+@extends('backend.dashboard')
+@section('backend')
 <section>
     <header>
         <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -60,8 +62,9 @@
 
         <x-input-error class="mt-2" :messages="$errors->get('logo_upload')" />
 
-        <button type="submit" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button type="submit" class="btn btn-primary">
             Upload
         </button>
     </form>
 </section>
+@endsection()
