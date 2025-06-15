@@ -1,0 +1,99 @@
+#!/bin/bash
+
+exec_log() {
+    echo "> $*"
+    "$@"
+}
+
+MARKER_FILE="/usr/share/nginx/html/storage/.setup_done"
+
+main() {
+    if [ "$IS_WORKER" = "true" ]; then
+        exec_log "$@"
+    else
+        prepare_file_permissions
+        run_npm_build
+        prepare_storage
+        wait_for_db
+
+        if [ ! -f "$MARKER_FILE" ]; then
+            run_migrations
+            run_seeders
+            touch "$MARKER_FILE"
+        else
+            echo "Setup already done, skipping migrations and seeders."
+        fi
+
+        optimize_app
+        run_server "$@"
+    fi
+}
+
+prepare_file_permissions() {
+    exec_log chmod a+x ./artisan
+}
+
+run_npm_build() {
+    echo "Installing NPM dependencies"
+    if [ -f "package.json" ]; then
+        echo "Running NPM clean install"
+        exec_log npm ci
+
+        echo "Running NPM build"
+        exec_log npm run build
+    else
+        echo "No package.json found, skipping NPM build"
+    fi
+}
+
+prepare_storage() {
+    mkdir -p /usr/share/nginx/html/storage/framework/cache/data
+    mkdir -p /usr/share/nginx/html/storage/framework/sessions
+    mkdir -p /usr/share/nginx/html/storage/framework/views
+
+    exec_log chown -R www-data:www-data /usr/share/nginx/html/storage
+    find /usr/share/nginx/html/storage -type d -exec chmod 775 {} \;
+    find /usr/share/nginx/html/storage -type f -exec chmod 664 {} \;
+
+    if [ ! -L /usr/share/nginx/html/public/storage ]; then
+        exec_log php artisan storage:link
+    else
+        echo "Storage symlink already exists, skipping"
+    fi
+}
+
+wait_for_db() {
+    echo "Waiting for DB to be ready..."
+    DB_HOST=${DB_HOST:-db}
+    DB_USERNAME=${DB_USERNAME:-${MYSQL_USER}}
+    DB_PASSWORD=${DB_PASSWORD:-${MYSQL_PASSWORD}}
+    DB_DATABASE=${DB_DATABASE:-${MYSQL_DATABASE}}
+
+    until mysql -h"$DB_HOST" -u"$DB_USERNAME" -p"$DB_PASSWORD" -e "SELECT 1;" "$DB_DATABASE" >/dev/null 2>&1; do
+        echo "Waiting for MySQL connection..."
+        sleep 1
+    done
+}
+
+run_migrations() {
+    echo "Running migrations"
+    exec_log ./artisan migrate --force || echo "Migration failed, continuing anyway"
+}
+
+run_seeders() {
+    echo "Running database seeders"
+    exec_log ./artisan db:seed --force || echo "Seeding failed, continuing anyway"
+}
+
+optimize_app() {
+    echo "Optimizing Laravel"
+    exec_log ./artisan optimize:clear || true
+    exec_log ./artisan optimize || true
+}
+
+run_server() {
+    echo "Starting php-fpm server"
+    exec /usr/local/bin/docker-php-entrypoint "$@"
+}
+
+main "$@"

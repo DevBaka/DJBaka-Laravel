@@ -304,6 +304,14 @@ namespace App\Models {
     /**
      * App\Models\FFXIVLogoSelected
      *
+     * @property \Illuminate\Support\Carbon|null $updated_at
+     * @property \Illuminate\Support\Carbon|null $created_at
+     * @property mixed $logo_id
+     * @property int $id
+     * @method static \Illuminate\Database\Eloquent\Builder<FFXIVLogoSelected>|FFXIVLogoSelected whereId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FFXIVLogoSelected>|FFXIVLogoSelected whereLogoId($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FFXIVLogoSelected>|FFXIVLogoSelected whereCreatedAt($value)
+     * @method static \Illuminate\Database\Eloquent\Builder<FFXIVLogoSelected>|FFXIVLogoSelected whereUpdatedAt($value)
      * @method static \Illuminate\Database\Eloquent\Builder<FFXIVLogoSelected>|FFXIVLogoSelected newModelQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<FFXIVLogoSelected>|FFXIVLogoSelected newQuery()
      * @method static \Illuminate\Database\Eloquent\Builder<FFXIVLogoSelected>|FFXIVLogoSelected query()
