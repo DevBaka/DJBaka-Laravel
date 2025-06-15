@@ -21,7 +21,9 @@ RUN docker-php-ext-install pdo pdo_mysql gd bcmath zip mbstring xml \
     && pecl install redis \
     && docker-php-ext-enable redis
 
-WORKDIR /usr/share/nginx/html/
+#WORKDIR /usr/share/nginx/html/
+WORKDIR /var/www/html
+
 
 COPY . ./
 
