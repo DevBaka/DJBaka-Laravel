@@ -16,7 +16,7 @@ class TwitchBot extends Command
         $port = 6667;
         $nickname = env('TWITCH_BOT_NAME');
         $token = env('TWITCH_BOT_TOKEN');
-        $channel = 'deejaybaka'; // z. B. "#deejaybaka"
+        $channel = 'deejaybaka';
 
         $socket = fsockopen($server, $port, $errno, $errstr, 30);
 
@@ -25,40 +25,24 @@ class TwitchBot extends Command
             return 1;
         }
 
-        // Login
         fwrite($socket, "PASS $token\r\n");
-        fflush($socket);
         fwrite($socket, "NICK $nickname\r\n");
-        fflush($socket);
-
-        $this->info(">> Verwende Nickname: $nickname");
-        $this->info(">> Verwende Token: " . substr($token, 0, 15) . '...');
-
-        // Rechte anfordern
         fwrite($socket, "CAP REQ :twitch.tv/tags twitch.tv/commands twitch.tv/membership\r\n");
-        fflush($socket);
 
-        // Channel ohne '#' für JOIN
         $joinChannel = ltrim($channel, '#');
         $ircChannel = "#$joinChannel";
         fwrite($socket, "JOIN $ircChannel\r\n");
-        fflush($socket);
-
-        echo ">>> JOIN $ircChannel gesendet – warte auf JE mindestens einen '353' oder '366'.\n";
 
         echo "Bot gestartet. Lausche auf $ircChannel ...\n";
 
-        // Direkter Testversuch nach kurzer Pause
         sleep(2);
-        echo ">>> Direkttest: Sende Testnachricht\n";
         fwrite($socket, "PRIVMSG $ircChannel :Testnachricht: bin ich drin?\r\n");
-        fflush($socket);
 
         $startNachrichtGesendet = false;
+        $activeUsers = [];
 
         while (!feof($socket)) {
             $data = fgets($socket, 512);
-
             if (!$data) {
                 continue;
             }
@@ -66,48 +50,65 @@ class TwitchBot extends Command
             $data = trim($data);
             echo "<<< RAW: $data\n";
 
-            // Verbindung am Leben halten
             if (strpos($data, 'PING :tmi.twitch.tv') !== false) {
                 fwrite($socket, "PONG :tmi.twitch.tv\r\n");
-                fflush($socket);
-                echo ">>> PONG gesendet.\n";
                 continue;
             }
 
-            // Nach erfolgreichem Join Startnachricht senden
             if (!$startNachrichtGesendet && preg_match('/^:tmi\.twitch\.tv 366 /', $data)) {
                 fwrite($socket, "PRIVMSG $ircChannel :Bot ist online!\r\n");
-                fflush($socket);
-                echo ">>> Startnachricht gesendet.\n";
                 $startNachrichtGesendet = true;
                 continue;
             }
 
-            // Chatnachrichten parsen und prüfen
             if (preg_match('/:([^!]+)!.* PRIVMSG #[^ ]+ :(.+)/i', $data, $matches)) {
                 $username = $matches[1] ?? 'user';
                 $message = trim($matches[2]);
 
                 echo "Nachricht von $username: $message\n";
 
-                // Suche DB-Command case-insensitive
-                $command = TwitchChatCommand::whereRaw('LOWER(command) = ?', [strtolower($message)])->first();
+                // Aktiven Nutzer merken
+                if (!in_array($username, $activeUsers)) {
+                    $activeUsers[] = $username;
+                }
+
+                // Extrahiere Kommando und Argumente
+                $parts = explode(' ', $message);
+                $cmdName = strtolower($parts[0]);
+                $args = array_slice($parts, 1);
+
+                $command = TwitchChatCommand::whereRaw('LOWER(command) = ?', [$cmdName])->first();
 
                 if ($command) {
                     echo "DB-Command gefunden: " . $command->command . "\n";
-                    $responseText = str_replace('{user}', $username, $command->response);
+
+                    // Platzhalter ersetzen
+                    $responseText = $command->response;
+
+                    // {user} ersetzen (immer vorhanden)
+                    $responseText = str_replace('{user}', "@$username", $responseText);
+
+                    // {arg1} ersetzen – entweder mit Argument oder zufälligem aktiven User
+                    if (count($args) >= 1 && !empty($args[0])) {
+                        // Doppelte @ vermeiden
+                        $arg1 = ltrim($args[0], '@');
+                        $responseText = str_replace('{arg1}', "@$arg1", $responseText);
+                    } else {
+                        $candidates = array_filter($activeUsers, fn($u) => strtolower($u) !== strtolower($username));
+                        $randomUser = count($candidates) > 0 ? $candidates[array_rand($candidates)] : 'niemand';
+                        $responseText = str_replace('{arg1}', "@$randomUser", $responseText);
+                    }
+
+                    // Nachricht senden
                     $response = "PRIVMSG $ircChannel :$responseText\r\n";
                     fwrite($socket, $response);
-                    fflush($socket);
                     echo "Antwort gesendet: $responseText\n";
                 } else {
                     echo "Kein DB-Command für Nachricht: $message\n";
 
-                    // Fallback !hello
                     if (strcasecmp($message, '!hello') === 0) {
-                        $response = "PRIVMSG $ircChannel :Hallo Welt, $username!\r\n";
+                        $response = "PRIVMSG $ircChannel :Hallo Welt, @$username!\r\n";
                         fwrite($socket, $response);
-                        fflush($socket);
                         echo "Antwort gesendet an $username\n";
                     }
                 }
