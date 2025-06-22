@@ -11,7 +11,7 @@ class TwitchChatCommandController extends Controller
     public function index()
     {
         $commands = TwitchChatCommand::all();
-        return view('backend.pages.twitch.chatbot.twitch-commands', compact('commands'));
+        return view('backend.pages.twitch.chatBot.twitch-commands', compact('commands'));
     }
 
     public function store(Request $request)

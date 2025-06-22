@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\TwitchChatCommand;
 
 class TwitchBot extends Command
 {
@@ -82,13 +83,34 @@ class TwitchBot extends Command
                 continue;
             }
 
-            // !hello erkennen und antworten
-            if (preg_match('/:([^!]+)!.* PRIVMSG #[^ ]+ :!hello/i', $data, $matches)) {
+            // Chatnachrichten parsen und prüfen
+            if (preg_match('/:([^!]+)!.* PRIVMSG #[^ ]+ :(.+)/i', $data, $matches)) {
                 $username = $matches[1] ?? 'user';
-                $response = "PRIVMSG $ircChannel :Hallo Welt, $username!\r\n";
-                fwrite($socket, $response);
-                fflush($socket);
-                echo ">>> Antwort gesendet an $username\n";
+                $message = trim($matches[2]);
+
+                echo "Nachricht von $username: $message\n";
+
+                // Suche DB-Command case-insensitive
+                $command = TwitchChatCommand::whereRaw('LOWER(command) = ?', [strtolower($message)])->first();
+
+                if ($command) {
+                    echo "DB-Command gefunden: " . $command->command . "\n";
+                    $responseText = str_replace('{user}', $username, $command->response);
+                    $response = "PRIVMSG $ircChannel :$responseText\r\n";
+                    fwrite($socket, $response);
+                    fflush($socket);
+                    echo "Antwort gesendet: $responseText\n";
+                } else {
+                    echo "Kein DB-Command für Nachricht: $message\n";
+
+                    // Fallback !hello
+                    if (strcasecmp($message, '!hello') === 0) {
+                        $response = "PRIVMSG $ircChannel :Hallo Welt, $username!\r\n";
+                        fwrite($socket, $response);
+                        fflush($socket);
+                        echo "Antwort gesendet an $username\n";
+                    }
+                }
             }
         }
 

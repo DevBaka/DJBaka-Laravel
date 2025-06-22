@@ -38,9 +38,9 @@ Route::middleware('auth')->group(function(){
     //Route::delete('/backend/twitch/bot/commands/{id}', [TwitchChatCommandController::class, 'destroy'])->name('commands.destroy');
 
 
-//    Route::resource('backend/twitch/bot/commands', TwitchChatCommandController::class)
-//   ->names('chatbot.commands')
-//    ->only(['index', 'store', 'update', 'destroy']);
+    Route::resource('backend/twitch/bot/commands', TwitchChatCommandController::class)
+    ->names('chatbot.commands')
+    ->only(['index', 'store', 'update', 'destroy']);
 
     // Admin-Bereich
     //Route::resource('backend/twitch/bot/commands', TwitchChatCommandController::class)
