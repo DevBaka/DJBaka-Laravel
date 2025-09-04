@@ -26,8 +26,14 @@
                     </li>
                     <li class="nav-item">
                         <a href="{{ route('chatbot.commands.index') }}" class="nav-link">
+                            <i class="link-icon" data-feather="command"></i>
+                            <span class="link-title">Chatbot Commands</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('twitch.chat.index') }}" class="nav-link">
                             <i class="link-icon" data-feather="message-square"></i>
-                            <span class="link-title">Twitch Chatbot</span>
+                            <span class="link-title">Twitch Chat</span>
                         </a>
                     </li>
                     <li class="nav-item nav-category">Components</li>

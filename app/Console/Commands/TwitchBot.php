@@ -4,11 +4,29 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Models\TwitchChatCommand;
+use App\Models\ChatMessage;
 
 class TwitchBot extends Command
 {
     protected $signature = 'twitch:bot';
     protected $description = 'Simple Twitch Chat Bot';
+
+    /**
+     * Parse IRC message tags
+     */
+    protected function parseTags($data)
+    {
+        $tags = [];
+        if (preg_match('/@([^ ]+) :/', $data, $tagMatch)) {
+            $tagString = $tagMatch[1];
+            $tagPairs = explode(';', $tagString);
+            foreach ($tagPairs as $pair) {
+                list($key, $value) = explode('=', $pair, 2);
+                $tags[$key] = $value;
+            }
+        }
+        return $tags;
+    }
 
     public function handle()
     {
@@ -61,11 +79,50 @@ class TwitchBot extends Command
                 continue;
             }
 
-            if (preg_match('/:([^!]+)!.* PRIVMSG #[^ ]+ :(.+)/i', $data, $matches)) {
+            // Match IRC message with tags (updated regex to handle Twitch IRC format)
+            if (preg_match('/:(\w+)!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #(\w+) :(.*)/', $data, $matches)) {
                 $username = $matches[1] ?? 'user';
-                $message = trim($matches[2]);
+                $channelName = $matches[2] ?? 'unknown';
+                $message = trim($matches[3] ?? '');
 
-                echo "Nachricht von $username: $message\n";
+                // Parse tags if they exist
+                $tags = [];
+                if (preg_match('/@([^ ]+) :/', $data, $tagMatch)) {
+                    $tagString = $tagMatch[1];
+                    $tagPairs = explode(';', $tagString);
+                    foreach ($tagPairs as $pair) {
+                        @list($key, $value) = explode('=', $pair, 2);
+                        if ($key) {
+                            $tags[$key] = $value ?? '';
+                        }
+                    }
+                }
+
+                echo "Nachricht von $username in #$channelName: $message\n";
+                if (!empty($tags)) {
+                    echo "Tags: " . json_encode($tags) . "\n";
+                }
+
+                // Save message to database
+                try {
+                    $chatMessage = new ChatMessage([
+                        'username' => $username,
+                        'channel' => $channelName,
+                        'message' => $message,
+                        'tags' => $tags
+                    ]);
+                    
+                    if ($chatMessage->save()) {
+                        echo "Nachricht in Datenbank gespeichert (ID: {$chatMessage->id})\n";
+                    } else {
+                        $this->error("Konnte Nachricht nicht speichern");
+                    }
+                } catch (\Exception $e) {
+                    $this->error("Fehler beim Speichern der Nachricht: " . $e->getMessage());
+                    if (strpos($e->getMessage(), 'SQLSTATE') !== false) {
+                        $this->error("SQL Fehler: " . $e->getMessage());
+                    }
+                }
 
                 // Aktiven Nutzer merken
                 if (!in_array($username, $activeUsers)) {

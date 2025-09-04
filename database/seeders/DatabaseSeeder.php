@@ -13,8 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
-        $this->call(AdminDataSeeder::class);
+        $this->call([
+            AdminDataSeeder::class,
+            ChatMessagesTableSeeder::class,
+        ]);
 
         // User::factory(10)->create();
 
