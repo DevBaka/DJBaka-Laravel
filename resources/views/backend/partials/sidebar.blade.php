@@ -19,16 +19,15 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                    <li class="nav-item">
                         <a href="{{ route('twitch.overlay.ffxiv.logo.edit') }}" class="nav-link">
-                            <i class="link-icon" data-feather="box"></i>
+                            <i class="link-icon" data-feather="image"></i>
                             <span class="link-title">FFXIV Logos</span>
                         </a>
                     </li>
-                    <li class="nav-item"
-                        <a href="pages/apps/calendar.html" class="nav-link">
-                            <i class="link-icon" data-feather="calendar"></i>
-                            <span class="link-title">Calendar</span>
+                    <li class="nav-item">
+                        <a href="{{ route('chatbot.commands.index') }}" class="nav-link">
+                            <i class="link-icon" data-feather="message-square"></i>
+                            <span class="link-title">Twitch Chatbot</span>
                         </a>
                     </li>
                     <li class="nav-item nav-category">Components</li>
